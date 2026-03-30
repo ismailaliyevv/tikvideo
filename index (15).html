@@ -1,0 +1,578 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>TikTok Down Video – No Watermark HD</title>
+  <meta name="description" content="Download TikTok videos in HD without watermark. Free Android app. Fast, secure, no login required."/>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Outfit:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+  <style>
+    :root {
+      --cyan: #00b8b2;
+      --pink: #ff0050;
+      --bg: #f5f7fa;
+      --surface: #ffffff;
+      --surface2: #eef1f5;
+      --border: #e0e4eb;
+      --text: #111827;
+      --muted: #6b7280;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Outfit', sans-serif;
+      line-height: 1.6;
+      overflow-x: hidden;
+    }
+
+    h1, h2, h3, .brand {
+      font-family: 'Nunito', sans-serif;
+    }
+
+    /* ── NOISE OVERLAY ── */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");
+      pointer-events: none;
+      z-index: 0;
+      opacity: 0.2;
+    }
+
+    /* ── GLOW BLOBS ── */
+    .blob {
+      position: absolute;
+      border-radius: 50%;
+      filter: blur(120px);
+      pointer-events: none;
+      z-index: 0;
+    }
+    .blob-cyan { background: rgba(0,184,178,0.15); width: 600px; height: 600px; }
+    .blob-pink { background: rgba(255,0,80,0.08); width: 500px; height: 500px; }
+
+    /* ── GRADIENT TEXT ── */
+    .grad-text {
+      background: linear-gradient(135deg, var(--cyan) 0%, #0077b6 50%, var(--pink) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    /* ── GLOW BUTTON ── */
+    .btn-download {
+      display: inline-flex;
+      align-items: center;
+      gap: 12px;
+      background: linear-gradient(135deg, var(--cyan), #009490);
+      color: #fff;
+      font-family: 'Nunito', sans-serif;
+      font-weight: 800;
+      font-size: 1.15rem;
+      padding: 18px 44px;
+      border-radius: 100px;
+      text-decoration: none;
+      letter-spacing: 0.02em;
+      box-shadow: 0 8px 30px rgba(0,184,178,0.4), 0 2px 8px rgba(0,0,0,0.1);
+      transition: transform 0.2s, box-shadow 0.2s;
+      position: relative;
+      z-index: 1;
+    }
+    .btn-download:hover {
+      transform: translateY(-3px) scale(1.03);
+      box-shadow: 0 12px 40px rgba(0,184,178,0.55), 0 4px 16px rgba(0,0,0,0.12);
+    }
+    .btn-download:active { transform: scale(0.97); }
+
+    /* ── SECTION TITLE BADGE ── */
+    .section-badge {
+      display: inline-block;
+      font-size: 0.72rem;
+      font-weight: 600;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      padding: 6px 16px;
+      border-radius: 100px;
+      border: 1px solid var(--border);
+      color: var(--muted);
+      margin-bottom: 16px;
+    }
+
+    /* ── FEATURE CARD ── */
+    .feat-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 32px 28px;
+      transition: border-color 0.3s, transform 0.3s, box-shadow 0.3s;
+      position: relative;
+      overflow: hidden;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.05);
+    }
+    .feat-card::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(135deg, rgba(0,184,178,0.04), transparent);
+      opacity: 0;
+      transition: opacity 0.3s;
+    }
+    .feat-card:hover { border-color: rgba(0,184,178,0.4); transform: translateY(-4px); box-shadow: 0 8px 30px rgba(0,184,178,0.12); }
+    .feat-card:hover::before { opacity: 1; }
+
+    .feat-icon {
+      width: 54px; height: 54px;
+      border-radius: 14px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.6rem;
+      margin-bottom: 20px;
+    }
+
+    /* ── STEP ── */
+    .step-num {
+      width: 44px; height: 44px; min-width: 44px;
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-family: 'Nunito', sans-serif;
+      font-weight: 800;
+      font-size: 1rem;
+      border: 2px solid var(--cyan);
+      color: var(--cyan);
+      box-shadow: 0 0 12px rgba(0,184,178,0.2);
+    }
+
+    .step-line {
+      width: 2px;
+      flex: 1;
+      background: linear-gradient(to bottom, var(--cyan), transparent);
+      margin: 6px auto;
+    }
+
+    /* ── POLICY SECTION ── */
+    .policy-box {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 40px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.05);
+    }
+    .policy-box h3 {
+      color: var(--cyan);
+      font-size: 1.05rem;
+      margin: 28px 0 10px;
+    }
+    .policy-box p, .policy-box li {
+      color: #4b5563;
+      font-size: 0.9rem;
+      margin-bottom: 8px;
+    }
+    .policy-box ul { padding-left: 20px; list-style: disc; }
+
+    /* ── NAVBAR ── */
+    nav {
+      position: sticky; top: 0; z-index: 100;
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      background: rgba(245,247,250,0.92);
+      border-bottom: 1px solid var(--border);
+      box-shadow: 0 1px 12px rgba(0,0,0,0.06);
+    }
+
+    /* ── DIVIDER ── */
+    .divider {
+      height: 1px;
+      background: linear-gradient(to right, transparent, var(--border), transparent);
+    }
+
+    /* ── PHONE MOCKUP ── */
+    .phone {
+      width: 200px; height: 360px;
+      background: var(--surface2);
+      border-radius: 36px;
+      border: 2px solid var(--border);
+      position: relative;
+      overflow: hidden;
+      box-shadow: 0 20px 60px rgba(0,184,178,0.18), 0 8px 30px rgba(0,0,0,0.12);
+    }
+    .phone::before {
+      content: '';
+      position: absolute;
+      top: 14px; left: 50%; transform: translateX(-50%);
+      width: 60px; height: 6px;
+      background: var(--border);
+      border-radius: 10px;
+    }
+    .phone-screen {
+      position: absolute;
+      inset: 28px 8px 8px;
+      background: #f0f4f8;
+      border-radius: 24px;
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+      gap: 10px;
+      padding: 16px;
+    }
+    .phone-tiktok-icon { font-size: 2.2rem; }
+    .phone-bar {
+      width: 100%; height: 8px;
+      background: var(--border);
+      border-radius: 4px;
+    }
+    .phone-bar.cyan { background: linear-gradient(90deg, var(--cyan), transparent); width: 70%; }
+    .phone-btn {
+      margin-top: 8px;
+      background: var(--cyan);
+      color: #fff;
+      font-size: 0.65rem;
+      font-weight: 700;
+      padding: 7px 18px;
+      border-radius: 100px;
+      font-family: 'Nunito', sans-serif;
+    }
+
+    /* ── ANIMATIONS ── */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(30px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes pulse-glow {
+      0%, 100% { box-shadow: 0 8px 30px rgba(0,184,178,0.4); }
+      50%       { box-shadow: 0 12px 50px rgba(0,184,178,0.6), 0 4px 20px rgba(255,0,80,0.15); }
+    }
+    .anim-fadeup { animation: fadeUp 0.8s ease both; }
+    .anim-delay-1 { animation-delay: 0.1s; }
+    .anim-delay-2 { animation-delay: 0.25s; }
+    .anim-delay-3 { animation-delay: 0.4s; }
+    .pulse { animation: pulse-glow 3s ease-in-out infinite; }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 640px) {
+      .btn-download { font-size: 1rem; padding: 16px 32px; width: 100%; justify-content: center; }
+      .policy-box { padding: 24px 18px; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ═══════════════════ NAVBAR ═══════════════════ -->
+<nav>
+  <div class="max-w-6xl mx-auto px-5 py-4 flex items-center justify-between">
+    <span class="brand text-xl font-extrabold" style="background: linear-gradient(90deg,var(--cyan),var(--pink)); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text;">
+        TikTok Down Video
+      </span>
+    <a href="app-release.apk"
+       class="text-sm font-semibold px-5 py-2 rounded-full border"
+       style="border-color: var(--cyan); color: var(--cyan); background: rgba(0,184,178,0.07);">
+      ↓ Download APK
+    </a>
+  </div>
+</nav>
+
+
+<!-- ═══════════════════ HERO ═══════════════════ -->
+<section class="relative min-h-screen flex items-center overflow-hidden" style="padding: 80px 20px;">
+  <!-- blobs -->
+  <div class="blob blob-cyan" style="top:-100px; left:-200px;"></div>
+  <div class="blob blob-pink" style="bottom:-100px; right:-200px;"></div>
+
+  <div class="max-w-6xl mx-auto w-full relative z-10">
+    <div class="flex flex-col lg:flex-row items-center gap-16">
+
+      <!-- Left text -->
+      <div class="flex-1 text-center lg:text-left">
+        <div class="section-badge anim-fadeup">Free Android App</div>
+
+        <h1 class="anim-fadeup anim-delay-1 text-5xl sm:text-6xl lg:text-7xl font-extrabold leading-tight mb-6">
+          Download<br/>
+          <span class="grad-text">TikTok Videos</span><br/>
+          in HD
+        </h1>
+
+        <p class="anim-fadeup anim-delay-2 text-lg mb-10 max-w-lg mx-auto lg:mx-0" style="color: var(--muted);">
+          Save any TikTok video <strong style="color: var(--text);">without watermark</strong> — HD, 4K, fast, and completely free. No login. No limits.
+        </p>
+
+        <div class="anim-fadeup anim-delay-3 flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
+          <a href="app-release.apk" class="btn-download pulse" download>
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M12 5v14M5 12l7 7 7-7"/><rect x="2" y="19" width="20" height="2" rx="1"/>
+            </svg>
+            Download APK
+          </a>
+          <a href="#how-it-works" class="inline-flex items-center gap-2 px-6 py-4 rounded-full text-sm font-semibold"
+             style="border: 1px solid var(--border); color: var(--muted);">
+            See how it works ↓
+          </a>
+        </div>
+
+        <!-- Stats row -->
+        <div class="mt-12 flex gap-8 justify-center lg:justify-start flex-wrap">
+          <div>
+            <div class="text-2xl font-extrabold" style="color: var(--cyan); font-family:'Syne',sans-serif;">100K+</div>
+            <div class="text-xs" style="color: var(--muted);">Downloads</div>
+          </div>
+          <div>
+            <div class="text-2xl font-extrabold" style="color: var(--pink); font-family:'Syne',sans-serif;">4K</div>
+            <div class="text-xs" style="color: var(--muted);">Max Quality</div>
+          </div>
+          <div>
+            <div class="text-2xl font-extrabold" style="color: var(--cyan); font-family:'Syne',sans-serif;">0</div>
+            <div class="text-xs" style="color: var(--muted);">Login Required</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Phone mockup -->
+      <div class="flex-shrink-0 hidden lg:flex items-center justify-center" style="perspective:1000px;">
+        <div class="phone" style="transform: rotateY(-8deg) rotateX(4deg);">
+          <div class="phone-screen">
+            <div class="phone-tiktok-icon">🎵</div>
+            <div class="phone-bar"></div>
+            <div class="phone-bar cyan"></div>
+            <div class="phone-bar" style="width:50%;"></div>
+            <div class="phone-bar cyan" style="width:85%; margin-top:6px;"></div>
+            <div class="phone-bar" style="width:60%;"></div>
+            <div class="phone-btn">Download HD</div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+
+<!-- ═══════════════════ FEATURES ═══════════════════ -->
+<section id="features" style="padding: 80px 20px;">
+  <div class="max-w-6xl mx-auto">
+    <div class="text-center mb-14">
+      <div class="section-badge">Why TikSave?</div>
+      <h2 class="text-4xl sm:text-5xl font-extrabold">Everything you need,<br/><span style="color: var(--cyan);">nothing you don't.</span></h2>
+    </div>
+
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+
+      <!-- Card 1 -->
+      <div class="feat-card">
+        <div class="feat-icon" style="background: rgba(0,242,234,0.1);">✨</div>
+        <h3 class="text-xl font-bold mb-3">No Watermark</h3>
+        <p style="color: var(--muted);">Download crystal-clean videos — no TikTok logo, no overlay. Perfect for reposting, editing, and sharing.</p>
+      </div>
+
+      <!-- Card 2 -->
+      <div class="feat-card">
+        <div class="feat-icon" style="background: rgba(255,0,80,0.1);">🎬</div>
+        <h3 class="text-xl font-bold mb-3">HD &amp; 4K Quality</h3>
+        <p style="color: var(--muted);">Full support for 720p, 1080p, and up to 4K resolution. Every pixel, preserved exactly as the creator intended.</p>
+      </div>
+
+      <!-- Card 3 -->
+      <div class="feat-card">
+        <div class="feat-icon" style="background: rgba(0,242,234,0.1);">⚡</div>
+        <h3 class="text-xl font-bold mb-3">Fast &amp; Secure</h3>
+        <p style="color: var(--muted);">No sign-up, no account, no data collection. Download in seconds — your privacy stays yours.</p>
+      </div>
+
+      <!-- Card 4 -->
+      <div class="feat-card">
+        <div class="feat-icon" style="background: rgba(255,0,80,0.1);">🎵</div>
+        <h3 class="text-xl font-bold mb-3">Audio Extraction</h3>
+        <p style="color: var(--muted);">Save just the audio as MP3. Extract trending sounds for your own projects effortlessly.</p>
+      </div>
+
+      <!-- Card 5 -->
+      <div class="feat-card">
+        <div class="feat-icon" style="background: rgba(0,242,234,0.1);">📦</div>
+        <h3 class="text-xl font-bold mb-3">Batch Download</h3>
+        <p style="color: var(--muted);">Download multiple videos at once from any profile. Save entire playlists with one tap.</p>
+      </div>
+
+      <!-- Card 6 -->
+      <div class="feat-card">
+        <div class="feat-icon" style="background: rgba(255,0,80,0.1);">📱</div>
+        <h3 class="text-xl font-bold mb-3">Lightweight App</h3>
+        <p style="color: var(--muted);">Under 5MB APK, zero background battery drain. Runs smoothly on any Android 6.0+ device.</p>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+
+<!-- ═══════════════════ HOW IT WORKS ═══════════════════ -->
+<section id="how-it-works" style="padding: 80px 20px;">
+  <div class="max-w-3xl mx-auto">
+    <div class="text-center mb-14">
+      <div class="section-badge">Simple Process</div>
+      <h2 class="text-4xl sm:text-5xl font-extrabold">3 steps to<br/><span style="color: var(--pink);">your video.</span></h2>
+    </div>
+
+    <div class="flex flex-col gap-0">
+
+      <!-- Step 1 -->
+      <div class="flex gap-6 items-start">
+        <div class="flex flex-col items-center">
+          <div class="step-num">1</div>
+          <div class="step-line h-20"></div>
+        </div>
+        <div class="pb-8 flex-1">
+          <div style="background:var(--surface); border:1px solid var(--border); border-radius:16px; padding:24px;">
+            <div class="text-2xl mb-2">📋</div>
+            <h3 class="text-lg font-bold mb-1">Copy the TikTok Link</h3>
+            <p style="color: var(--muted); font-size:0.9rem;">Open TikTok, tap the share button on any video, and copy the link to your clipboard.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Step 2 -->
+      <div class="flex gap-6 items-start">
+        <div class="flex flex-col items-center">
+          <div class="step-num">2</div>
+          <div class="step-line h-20"></div>
+        </div>
+        <div class="pb-8 flex-1">
+          <div style="background:var(--surface); border:1px solid var(--border); border-radius:16px; padding:24px;">
+            <div class="text-2xl mb-2">📌</div>
+            <h3 class="text-lg font-bold mb-1">Paste into TikTok Down Video</h3>
+            <p style="color: var(--muted); font-size:0.9rem;">Open the TikTok Down Video app and paste your link. The app instantly fetches video details and available resolutions.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Step 3 -->
+      <div class="flex gap-6 items-start">
+        <div class="flex flex-col items-center">
+          <div class="step-num" style="border-color:var(--pink); color:var(--pink); box-shadow:0 0 16px rgba(255,0,80,0.25);">3</div>
+        </div>
+        <div class="flex-1">
+          <div style="background:var(--surface); border:1px solid rgba(255,0,80,0.3); border-radius:16px; padding:24px;">
+            <div class="text-2xl mb-2">⬇️</div>
+            <h3 class="text-lg font-bold mb-1">Choose Quality &amp; Download</h3>
+            <p style="color: var(--muted); font-size:0.9rem;">Select your preferred quality — 480p, 720p, 1080p or 4K — and tap Download. Video saves directly to your gallery.</p>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- CTA -->
+    <div class="text-center mt-12">
+      <a href="app-release.apk" class="btn-download" download>
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M12 5v14M5 12l7 7 7-7"/>
+        </svg>
+        Get the Free APK
+      </a>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+
+<!-- ═══════════════════ PRIVACY POLICY ═══════════════════ -->
+<section id="privacy" style="padding: 80px 20px;">
+  <div class="max-w-4xl mx-auto">
+    <div class="text-center mb-14">
+      <div class="section-badge">Legal</div>
+      <h2 class="text-4xl font-extrabold">Privacy Policy</h2>
+      <p style="color: var(--muted); margin-top: 10px;">Last updated: January 2025</p>
+    </div>
+
+    <div class="policy-box">
+
+      <p>This Privacy Policy describes how <strong>TikTok Down Video</strong> ("the App"), developed by <strong>Ismayil</strong>, handles user information. We are committed to protecting your privacy. By using this App, you agree to this policy.</p>
+
+      <h3>1. Information We Collect</h3>
+      <p><strong>We do NOT collect any personally identifiable information (PII).</strong> The App does not require you to create an account, log in, or provide any personal details such as your name, email address, or phone number.</p>
+      <p>The only data processed is the TikTok video URL that you voluntarily enter into the app. This URL is used solely to retrieve the downloadable video file and is never stored on any server.</p>
+
+      <h3>2. Video Storage & Server Policy</h3>
+      <p><strong>We do NOT store user videos on our servers.</strong> All video downloads are processed client-side and saved directly to your device's local storage. No video content is uploaded to, cached on, or retained by our infrastructure at any point.</p>
+
+      <h3>3. Third-Party Advertising</h3>
+      <p>This App uses third-party advertising services to support free access. These providers may collect anonymized, non-personal data such as device type, OS version, and ad interactions to serve relevant advertisements. We use the following ad networks:</p>
+      <ul>
+        <li><strong>AppLovin</strong> – <a href="https://www.applovin.com/privacy/" style="color: var(--cyan);">Privacy Policy</a></li>
+        <li><strong>Unity Ads</strong> – <a href="https://unity.com/legal/privacy-policy" style="color: var(--cyan);">Privacy Policy</a></li>
+      </ul>
+      <p>We encourage you to review the privacy policies of these third parties. We do not control the data collection practices of these providers.</p>
+
+      <h3>4. Permissions Used</h3>
+      <p>The App requests the following Android permissions:</p>
+      <ul>
+        <li><strong>INTERNET</strong> – Required to fetch video data from TikTok.</li>
+        <li><strong>WRITE_EXTERNAL_STORAGE</strong> – Required to save downloaded videos to your device.</li>
+        <li><strong>READ_EXTERNAL_STORAGE</strong> – Required to access saved files for playback.</li>
+      </ul>
+      <p>No other permissions are requested. None of these permissions are used to collect personal data.</p>
+
+      <h3>5. Children's Privacy</h3>
+      <p>This App is not directed to children under the age of 13. We do not knowingly collect personal information from children. If you believe a child has provided personal information, please contact us immediately.</p>
+
+      <h3>6. Data Security</h3>
+      <p>Since we do not collect or store personal data, there is no personal data at risk of a security breach from our servers. All data remains on your device and is subject to your device's security controls.</p>
+
+      <h3>7. Changes to This Policy</h3>
+      <p>We may update this Privacy Policy from time to time. Any changes will be reflected on this page with an updated date. Continued use of the App after changes constitutes acceptance of the updated policy.</p>
+
+      <h3>8. Contact</h3>
+      <p>If you have any questions or concerns about this Privacy Policy, please contact the developer:</p>
+      <p><strong>Developer:</strong> Ismayil<br/>
+      <strong>Email:</strong> <a href="mailto:ismayil@tiksave.app" style="color: var(--cyan);">ismayil@tiksave.app</a></p>
+
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+
+<!-- ═══════════════════ FOOTER ═══════════════════ -->
+<footer style="padding: 40px 20px; background: var(--surface); border-top: 1px solid var(--border);">
+  <div class="max-w-6xl mx-auto">
+
+    <div class="flex flex-col md:flex-row items-center justify-between gap-6 mb-8">
+      <span class="brand text-2xl font-extrabold" style="background: linear-gradient(90deg,var(--cyan),var(--pink)); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text;">
+        TikTok Down Video
+      </span>
+      <nav class="flex gap-6 text-sm flex-wrap justify-center" style="color: var(--muted);">
+        <a href="#features" style="color: var(--muted);" class="hover:underline">Features</a>
+        <a href="#how-it-works" style="color: var(--muted);" class="hover:underline">How it Works</a>
+        <a href="#privacy" style="color: var(--muted);" class="hover:underline">Privacy Policy</a>
+        <a href="app-release.apk" style="color: var(--cyan);" download>Download APK</a>
+      </nav>
+    </div>
+
+    <div class="divider mb-6"></div>
+
+    <!-- app-ads.txt placeholder notice -->
+    <div style="background: rgba(0,242,234,0.05); border: 1px dashed rgba(0,242,234,0.2); border-radius: 12px; padding: 16px 20px; margin-bottom: 24px;">
+      <p style="font-size: 0.78rem; color: var(--muted); line-height: 1.8;">
+        <strong style="color: var(--cyan);">app-ads.txt</strong> — Place your <code style="background:var(--surface2); padding:2px 6px; border-radius:4px; font-size:0.75rem;">app-ads.txt</code> file at the root of this domain (e.g., <code style="background:var(--surface2); padding:2px 6px; border-radius:4px; font-size:0.75rem;">https://yourdomain.com/app-ads.txt</code>) to comply with IAB standards for authorized ad sellers. Add your AppLovin and Unity Ads network lines to that file.
+      </p>
+      <p style="font-size: 0.75rem; color: #555; margin-top: 8px;">
+        Example content for app-ads.txt:<br/>
+        <code style="background:var(--surface2); padding:4px 8px; border-radius:6px; font-size:0.72rem; display:inline-block; margin-top:4px;">applovin.com, [YOUR_SDK_KEY], DIRECT<br/>unity.com, [YOUR_GAME_ID], DIRECT</code>
+      </p>
+    </div>
+
+    <p class="text-center text-xs" style="color: var(--muted);">
+      © 2025 TikTok Down Video by Ismayil. All rights reserved. This app is not affiliated with, endorsed by, or sponsored by TikTok or ByteDance Ltd.
+    </p>
+
+  </div>
+</footer>
+
+</body>
+</html>
